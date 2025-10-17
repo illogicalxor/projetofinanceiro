@@ -3,7 +3,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import scrolledtext
 
-def get_stock_data(ticker, start="2000-01-01", end="2025-02-01"):
+def get_stock_data(ticker, monthly_investment, start, end):
     try:
         stock = yf.Ticker(ticker)
         hist = stock.history(start=start, end=end, auto_adjust=False)  # Get raw data
@@ -18,7 +18,6 @@ def get_stock_data(ticker, start="2000-01-01", end="2025-02-01"):
         df.columns = ["Date", "Close", "Dividends", "Stock Splits"]
 
         shares = 0
-        monthly_investment = 1000
         total_aportes = 0
 
         # Get the first trading day of each month
@@ -56,6 +55,10 @@ def run_backtest():
     datas_iniciais = {}
 
     a = tickers_entry.get().strip()
+    monthly_investment = float(investment_entry.get() or 1000)
+    start_date = start_date_entry.get() or "2000-01-01"
+    end_date = end_date_entry.get() or "2025-02-01"
+
 
     if not a:
         output_text.insert(tk.END, "Por favor, digite os tickers.")
@@ -67,7 +70,7 @@ def run_backtest():
         if ticker[-1] in "341":
             ticker += ".SA"
 
-        error_msg, patrimonio, investido, data_inicial = get_stock_data(ticker)
+        error_msg, patrimonio, investido, data_inicial = get_stock_data(ticker, monthly_investment, start_date, end_date)
         if error_msg:
             output_text.insert(tk.END, error_msg + "\n")
         else:
@@ -85,18 +88,43 @@ def run_backtest():
 root = tk.Tk()
 root.title("Backtest de Aportes Mensais")
 
-frame = tk.Frame(root)
-frame.pack(padx=10, pady=10)
+# Frame for inputs
+input_frame = tk.Frame(root)
+input_frame.pack(padx=10, pady=10)
 
-tickers_label = tk.Label(frame, text="Tickers (separados por espaço):")
-tickers_label.pack(side=tk.LEFT)
+# Tickers
+tickers_label = tk.Label(input_frame, text="Tickers (separados por espaço):")
+tickers_label.grid(row=0, column=0, sticky="w", pady=2)
+tickers_entry = tk.Entry(input_frame, width=50)
+tickers_entry.grid(row=0, column=1, sticky="w", pady=2)
 
-tickers_entry = tk.Entry(frame, width=50)
-tickers_entry.pack(side=tk.LEFT, padx=5)
+# Monthly Investment
+investment_label = tk.Label(input_frame, text="Valor do Aporte Mensal:")
+investment_label.grid(row=1, column=0, sticky="w", pady=2)
+investment_entry = tk.Entry(input_frame)
+investment_entry.grid(row=1, column=1, sticky="w", pady=2)
+investment_entry.insert(0, "1000")
 
-run_button = tk.Button(frame, text="Executar Backtest", command=run_backtest)
-run_button.pack(side=tk.LEFT, padx=5)
+# Start Date
+start_date_label = tk.Label(input_frame, text="Data de Início (YYYY-MM-DD):")
+start_date_label.grid(row=2, column=0, sticky="w", pady=2)
+start_date_entry = tk.Entry(input_frame)
+start_date_entry.grid(row=2, column=1, sticky="w", pady=2)
+start_date_entry.insert(0, "2000-01-01")
 
+# End Date
+end_date_label = tk.Label(input_frame, text="Data de Fim (YYYY-MM-DD):")
+end_date_label.grid(row=3, column=0, sticky="w", pady=2)
+end_date_entry = tk.Entry(input_frame)
+end_date_entry.grid(row=3, column=1, sticky="w", pady=2)
+end_date_entry.insert(0, "2025-02-01")
+
+
+# Run button
+run_button = tk.Button(input_frame, text="Executar Backtest", command=run_backtest)
+run_button.grid(row=4, column=0, columnspan=2, pady=10)
+
+# Output text
 output_text = scrolledtext.ScrolledText(root, width=80, height=20)
 output_text.pack(padx=10, pady=10)
 
