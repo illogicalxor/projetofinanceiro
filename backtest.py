@@ -3,6 +3,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk, scrolledtext
 
+
 def get_stock_data(ticker, monthly_investment, start, end):
     try:
         stock = yf.Ticker(ticker)
@@ -21,24 +22,24 @@ def get_stock_data(ticker, monthly_investment, start, end):
         total_aportes = 0
 
         # Get the first trading day of each month
-        df['Month'] = df['Date'].dt.to_period('M')
-        investment_days = df.groupby('Month')['Date'].first()
+        df["Month"] = df["Date"].dt.to_period("M")
+        investment_days = df.groupby("Month")["Date"].first()
         investment_days_set = set(investment_days)
 
         for _, row in df.iterrows():
             # Adjust shares on split
-            if row['Stock Splits'] > 0:
-                shares *= row['Stock Splits']
+            if row["Stock Splits"] > 0:
+                shares *= row["Stock Splits"]
 
             # Reinvest dividends
-            if row['Dividends'] > 0 and shares > 0:
+            if row["Dividends"] > 0 and shares > 0:
                 if row["Close"] > 0:
-                    shares += (row['Dividends'] * shares) / row['Close']
+                    shares += (row["Dividends"] * shares) / row["Close"]
 
             # Monthly investment
-            if row['Date'] in investment_days_set:
+            if row["Date"] in investment_days_set:
                 if row["Close"] > 0:
-                    shares += monthly_investment / row['Close']
+                    shares += monthly_investment / row["Close"]
                     total_aportes += monthly_investment
 
         latest_price = df.iloc[-1]["Close"]
@@ -48,8 +49,9 @@ def get_stock_data(ticker, monthly_investment, start, end):
     except Exception as e:
         return f"Erro ao processar {ticker}: {e}", 0, 0, None
 
+
 def run_backtest():
-    output_text.delete('1.0', tk.END)
+    output_text.delete("1.0", tk.END)
     s = 0
     total_investido = 0
     datas_iniciais = {}
@@ -58,7 +60,6 @@ def run_backtest():
     monthly_investment = float(investment_entry.get() or 1000)
     start_date = start_date_entry.get() or "2000-01-01"
     end_date = end_date_entry.get() or "2025-02-01"
-
 
     if not a:
         output_text.insert(tk.END, "Por favor, digite os tickers.")
@@ -70,7 +71,9 @@ def run_backtest():
         if ticker[-1] in "341":
             ticker += ".SA"
 
-        error_msg, patrimonio, investido, data_inicial = get_stock_data(ticker, monthly_investment, start_date, end_date)
+        error_msg, patrimonio, investido, data_inicial = get_stock_data(
+            ticker, monthly_investment, start_date, end_date
+        )
         if error_msg:
             output_text.insert(tk.END, error_msg + "\n")
         else:
@@ -83,11 +86,13 @@ def run_backtest():
     for ticker, data in datas_iniciais.items():
         output_text.insert(tk.END, f"Primeira data válida para {ticker}: {data}\n")
 
+
 def copy_to_clipboard():
     text = output_text.get("1.0", tk.END)
     if text.strip():
         root.clipboard_clear()
         root.clipboard_append(text)
+
 
 # GUI setup
 root = tk.Tk()
@@ -136,7 +141,9 @@ end_date_entry.insert(0, "2025-02-01")
 input_frame.columnconfigure(1, weight=1)
 
 # Run button
-run_button = ttk.Button(main_frame, text="Executar Backtest", command=run_backtest, style="Accent.TButton")
+run_button = ttk.Button(
+    main_frame, text="Executar Backtest", command=run_backtest, style="Accent.TButton"
+)
 run_button.pack(pady=10)
 
 # Output frame
@@ -146,7 +153,9 @@ output_frame.pack(fill="both", expand=True)
 output_text = scrolledtext.ScrolledText(output_frame, width=80, height=20, wrap=tk.WORD)
 output_text.pack(fill="both", expand=True, side="top", padx=5, pady=5)
 
-copy_button = ttk.Button(output_frame, text="Copiar Resultados", command=copy_to_clipboard)
+copy_button = ttk.Button(
+    output_frame, text="Copiar Resultados", command=copy_to_clipboard
+)
 copy_button.pack(pady=5, side="bottom")
 
 
@@ -155,3 +164,4 @@ style.configure("Accent.TButton", foreground="white", background="#0078D7")
 
 
 root.mainloop()
+
