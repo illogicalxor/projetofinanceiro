@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import tkinter as tk
-from tkinter import scrolledtext
+from tkinter import ttk, scrolledtext
 
 def get_stock_data(ticker, monthly_investment, start, end):
     try:
@@ -87,45 +87,63 @@ def run_backtest():
 # GUI setup
 root = tk.Tk()
 root.title("Backtest de Aportes Mensais")
+root.geometry("600x500")
 
-# Frame for inputs
-input_frame = tk.Frame(root)
-input_frame.pack(padx=10, pady=10)
+# Style
+style = ttk.Style(root)
+style.theme_use("clam")
+
+# Main frame
+main_frame = ttk.Frame(root, padding="10")
+main_frame.pack(fill="both", expand=True)
+
+# Input frame
+input_frame = ttk.LabelFrame(main_frame, text="Parâmetros do Backtest", padding="10")
+input_frame.pack(fill="x")
 
 # Tickers
-tickers_label = tk.Label(input_frame, text="Tickers (separados por espaço):")
-tickers_label.grid(row=0, column=0, sticky="w", pady=2)
-tickers_entry = tk.Entry(input_frame, width=50)
-tickers_entry.grid(row=0, column=1, sticky="w", pady=2)
+
+tickers_label = ttk.Label(input_frame, text="Tickers (separados por espaço):")
+tickers_label.grid(row=0, column=0, sticky="w", padx=5, pady=5)
+tickers_entry = ttk.Entry(input_frame, width=40)
+tickers_entry.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
 
 # Monthly Investment
-investment_label = tk.Label(input_frame, text="Valor do Aporte Mensal:")
-investment_label.grid(row=1, column=0, sticky="w", pady=2)
-investment_entry = tk.Entry(input_frame)
-investment_entry.grid(row=1, column=1, sticky="w", pady=2)
+investment_label = ttk.Label(input_frame, text="Valor do Aporte Mensal:")
+investment_label.grid(row=1, column=0, sticky="w", padx=5, pady=5)
+investment_entry = ttk.Entry(input_frame)
+investment_entry.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
 investment_entry.insert(0, "1000")
 
 # Start Date
-start_date_label = tk.Label(input_frame, text="Data de Início (YYYY-MM-DD):")
-start_date_label.grid(row=2, column=0, sticky="w", pady=2)
-start_date_entry = tk.Entry(input_frame)
-start_date_entry.grid(row=2, column=1, sticky="w", pady=2)
+start_date_label = ttk.Label(input_frame, text="Data de Início (YYYY-MM-DD):")
+start_date_label.grid(row=2, column=0, sticky="w", padx=5, pady=5)
+start_date_entry = ttk.Entry(input_frame)
+start_date_entry.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
 start_date_entry.insert(0, "2000-01-01")
 
 # End Date
-end_date_label = tk.Label(input_frame, text="Data de Fim (YYYY-MM-DD):")
-end_date_label.grid(row=3, column=0, sticky="w", pady=2)
-end_date_entry = tk.Entry(input_frame)
-end_date_entry.grid(row=3, column=1, sticky="w", pady=2)
+end_date_label = ttk.Label(input_frame, text="Data de Fim (YYYY-MM-DD):")
+end_date_label.grid(row=3, column=0, sticky="w", padx=5, pady=5)
+end_date_entry = ttk.Entry(input_frame)
+end_date_entry.grid(row=3, column=1, sticky="ew", padx=5, pady=5)
 end_date_entry.insert(0, "2025-02-01")
 
+input_frame.columnconfigure(1, weight=1)
 
 # Run button
-run_button = tk.Button(input_frame, text="Executar Backtest", command=run_backtest)
-run_button.grid(row=4, column=0, columnspan=2, pady=10)
+run_button = ttk.Button(main_frame, text="Executar Backtest", command=run_backtest, style="Accent.TButton")
+run_button.pack(pady=10)
 
 # Output text
-output_text = scrolledtext.ScrolledText(root, width=80, height=20)
-output_text.pack(padx=10, pady=10)
+output_frame = ttk.LabelFrame(main_frame, text="Resultados", padding="10")
+output_frame.pack(fill="both", expand=True)
+
+output_text = scrolledtext.ScrolledText(output_frame, width=80, height=20, wrap=tk.WORD)
+output_text.pack(fill="both", expand=True)
+
+# Custom style for the button
+style.configure("Accent.TButton", foreground="white", background="#0078D7")
+
 
 root.mainloop()
