@@ -83,6 +83,11 @@ def run_backtest():
     for ticker, data in datas_iniciais.items():
         output_text.insert(tk.END, f"Primeira data válida para {ticker}: {data}\n")
 
+def copy_to_clipboard():
+    text = output_text.get("1.0", tk.END)
+    if text.strip():
+        root.clipboard_clear()
+        root.clipboard_append(text)
 
 # GUI setup
 root = tk.Tk()
@@ -102,7 +107,6 @@ input_frame = ttk.LabelFrame(main_frame, text="Parâmetros do Backtest", padding
 input_frame.pack(fill="x")
 
 # Tickers
-
 tickers_label = ttk.Label(input_frame, text="Tickers (separados por espaço):")
 tickers_label.grid(row=0, column=0, sticky="w", padx=5, pady=5)
 tickers_entry = ttk.Entry(input_frame, width=40)
@@ -135,12 +139,16 @@ input_frame.columnconfigure(1, weight=1)
 run_button = ttk.Button(main_frame, text="Executar Backtest", command=run_backtest, style="Accent.TButton")
 run_button.pack(pady=10)
 
-# Output text
+# Output frame
 output_frame = ttk.LabelFrame(main_frame, text="Resultados", padding="10")
 output_frame.pack(fill="both", expand=True)
 
 output_text = scrolledtext.ScrolledText(output_frame, width=80, height=20, wrap=tk.WORD)
-output_text.pack(fill="both", expand=True)
+output_text.pack(fill="both", expand=True, side="top", padx=5, pady=5)
+
+copy_button = ttk.Button(output_frame, text="Copiar Resultados", command=copy_to_clipboard)
+copy_button.pack(pady=5, side="bottom")
+
 
 # Custom style for the button
 style.configure("Accent.TButton", foreground="white", background="#0078D7")
