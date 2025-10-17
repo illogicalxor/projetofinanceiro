@@ -1,0 +1,57 @@
+# Relatório de Alterações e Funcionamento do Script de Backtesting
+
+## Resumo das Alterações
+
+O script `backtest.py` foi significativamente aprimorado a partir de sua versão inicial de linha de comando. As principais alterações incluem:
+
+1.  **Cálculo Preciso de Proventos:** A lógica de backtesting foi corrigida para contabilizar dividendos e desdobramentos de ações (splits). Agora, os dividendos são reinvestidos automaticamente, e a quantidade de ações é ajustada em casos de desdobramento, proporcionando um cálculo de patrimônio mais realista.
+
+2.  **Interface Gráfica (GUI):** Uma interface gráfica foi implementada com a biblioteca `tkinter`, substituindo a interação via linha de comando. Isso torna o programa mais acessível e fácil de usar.
+
+3.  **Interatividade da GUI:** A interface foi aprimorada para permitir que o usuário personalize os parâmetros do backtest, como o valor do aporte mensal e as datas de início e fim da análise.
+
+4.  **Melhoria Visual:** A aparência da GUI foi modernizada utilizando os widgets temáticos do `tkinter.ttk`, resultando em um design mais limpo e profissional.
+
+5.  **Funcionalidade de Copiar:** Foi adicionado um botão "Copiar Resultados" para que o usuário possa facilmente copiar os dados do backtest para a área de transferência.
+
+6.  **Versionamento:** Todas as alterações foram devidamente versionadas em um repositório Git.
+
+## Como o Código Funciona
+
+O script é dividido em duas partes principais: a lógica de backtesting e a interface gráfica.
+
+### Lógica de Backtesting (`get_stock_data`)
+
+A função `get_stock_data` é o coração do backtest. Ela recebe um ticker de ação, o valor do aporte mensal e as datas de início e fim como parâmetros. Seus passos são:
+
+1.  **Coleta de Dados:** Utiliza a biblioteca `yfinance` para baixar o histórico de preços da ação, incluindo dados de dividendos e desdobramentos (`auto_adjust=False`).
+
+2.  **Processamento Diário:** Itera dia a dia pelo histórico de dados:
+    *   **Desdobramentos (Splits):** Se um desdobramento ocorre, a quantidade de ações é multiplicada pelo fator do desdobramento.
+    *   **Dividendos:** Se dividendos são pagos, o valor total recebido é usado para comprar mais ações ao preço do dia (reinvestimento).
+    *   **Aportes Mensais:** No primeiro dia útil de cada mês, o valor do aporte mensal definido pelo usuário é usado para comprar mais ações.
+
+3.  **Cálculo Final:** Ao final do período, o patrimônio total é calculado multiplicando a quantidade final de ações pelo último preço registrado.
+
+4.  **Retorno:** A função retorna o patrimônio total, o total de aportes realizados e a primeira data de negociação encontrada para o ativo.
+
+### Interface Gráfica (GUI)
+
+A interface gráfica é construída com `tkinter` e `ttk` e é responsável pela interação com o usuário.
+
+1.  **Janela Principal:** Uma janela principal é criada com o título "Backtest de Aportes Mensais".
+
+2.  **Campos de Entrada:** A interface contém campos para o usuário inserir:
+    *   Os tickers das ações (separados por espaço).
+    *   O valor do aporte mensal.
+    *   A data de início do backtest.
+    *   A data de fim do backtest.
+
+3.  **Botão "Executar Backtest":** Ao clicar neste botão, a função `run_backtest` é chamada.
+
+4.  **Função `run_backtest`:** Esta função:
+    *   Lê os valores dos campos de entrada.
+    *   Para cada ticker, chama a função `get_stock_data` para executar o backtest.
+    *   Exibe os resultados (patrimônio total, total investido e datas) na área de texto de resultados.
+
+5.  **Área de Resultados e Botão "Copiar":** Os resultados são exibidos em uma caixa de texto com rolagem. O botão "Copiar Resultados" permite que o conteúdo desta caixa de texto seja copiado para a área de transferência do sistema.
