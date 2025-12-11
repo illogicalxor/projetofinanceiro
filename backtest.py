@@ -7,7 +7,7 @@ from tkinter import ttk, scrolledtext
 def get_stock_data(ticker, monthly_investment, start, end):
     try:
         stock = yf.Ticker(ticker)
-        hist = stock.history(start=start, end=end, auto_adjust=False)  # Get raw data
+        hist = stock.history(start=start, end=end, auto_adjust=True)  # Get raw data
 
         if hist.empty:
             return f"Erro: Não foi possível obter dados para {ticker}", 0, 0, None
@@ -164,4 +164,3 @@ style.configure("Accent.TButton", foreground="white", background="#0078D7")
 
 
 root.mainloop()
-
