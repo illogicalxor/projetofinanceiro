@@ -27,15 +27,6 @@ def get_stock_data(ticker, monthly_investment, start, end):
         investment_days_set = set(investment_days)
 
         for _, row in df.iterrows():
-            # Adjust shares on split
-            if row["Stock Splits"] > 0:
-                shares *= row["Stock Splits"]
-
-            # Reinvest dividends
-            if row["Dividends"] > 0 and shares > 0:
-                if row["Close"] > 0:
-                    shares += (row["Dividends"] * shares) / row["Close"]
-
             # Monthly investment
             if row["Date"] in investment_days_set:
                 if row["Close"] > 0:
