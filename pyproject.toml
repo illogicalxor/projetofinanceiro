@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projeto-financeiro"
+version = "2.0.0"
+description = "Ferramentas de análise financeira para investimentos brasileiros"
+requires-python = ">=3.10"
+dependencies = [
+    "yfinance",
+    "pandas",
+    "requests",
+    "matplotlib",
+    "numpy",
+    "mplcursors",
+    "lxml",
+    "html5lib",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+financeiro = "projetofinanceiro.app:main"
+
+[tool.pytest.ini_options]
+markers = [
+    "network: marks tests that require network access",
+]

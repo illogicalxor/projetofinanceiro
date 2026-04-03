@@ -6,4 +6,6 @@ numpy
 mplcursors
 lxml
 html5lib
+
+[test]
 pytest

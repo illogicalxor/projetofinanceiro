@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+src/projeto_financeiro.egg-info/PKG-INFO
+src/projeto_financeiro.egg-info/SOURCES.txt
+src/projeto_financeiro.egg-info/dependency_links.txt
+src/projeto_financeiro.egg-info/entry_points.txt
+src/projeto_financeiro.egg-info/requires.txt
+src/projeto_financeiro.egg-info/top_level.txt
+src/projetofinanceiro/__init__.py
+src/projetofinanceiro/app.py
+src/projetofinanceiro/core.py
+tests/test_core.py

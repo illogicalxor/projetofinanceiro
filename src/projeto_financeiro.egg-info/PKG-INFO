@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: projeto-financeiro
+Version: 2.0.0
+Summary: Ferramentas de análise financeira para investimentos brasileiros
+Requires-Python: >=3.10
+Requires-Dist: yfinance
+Requires-Dist: pandas
+Requires-Dist: requests
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: mplcursors
+Requires-Dist: lxml
+Requires-Dist: html5lib
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
